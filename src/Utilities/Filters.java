@@ -26,6 +26,12 @@ public class Filters {
                     ok++;
                 }
             }
+            if (filterYear == null) {
+                ok ++;
+            }
+            if (filterGenre == null) {
+                ok ++;
+            }
             if (ok == 2) {
                 filteredMovies.put(movie.getTitle(), Helper.getRatingMovie(users, movie));
             }
@@ -46,6 +52,12 @@ public class Filters {
                 if (gen.equals(filterGenre)) {
                     ok++;
                 }
+            }
+            if (filterYear == null) {
+                ok ++;
+            }
+            if (filterGenre == null) {
+                ok ++;
             }
             if (ok == 2) {
                 filteredMovies.put(movie.getTitle(), 0);
@@ -69,6 +81,12 @@ public class Filters {
                     ok++;
                 }
             }
+            if (filterYear == null) {
+                ok ++;
+            }
+            if (filterGenre == null) {
+                ok ++;
+            }
             if (ok == 2) {
                 filteredShows.put(show.getTitle(), Helper.getRatingShow(users, show));
             }
@@ -89,6 +107,12 @@ public class Filters {
                 if (gen.equals(filterGenre)) {
                     ok++;
                 }
+            }
+            if (filterYear == null) {
+                ok ++;
+            }
+            if (filterGenre == null) {
+                ok ++;
             }
             if (ok == 2) {
                 filteredShows.put(show.getTitle(), 0);

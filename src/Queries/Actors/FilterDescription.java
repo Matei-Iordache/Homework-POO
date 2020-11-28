@@ -5,10 +5,7 @@ import fileio.ActionInputData;
 import fileio.ActorInputData;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class FilterDescription {
     List<ActorInputData> actors;
@@ -21,10 +18,12 @@ public class FilterDescription {
         List<String> filters = action.getFilters().get(2);
         ArrayList<String> actorsWithFilters = new ArrayList<>();
         for(ActorInputData actor : actors) {
-            String carrerDescription = actor.getCareerDescription();
+            String carrerDescription = actor.getCareerDescription().toLowerCase();
+            String[] split = carrerDescription.split("[ -.,]");
+            List<String> carrerDesc = Arrays.asList(split);
             int counter = 0;
             for (String filter : filters) {
-                if (carrerDescription.contains(filter)) {
+                if (carrerDesc.contains(filter)) {
                     counter++;
                 }
             }

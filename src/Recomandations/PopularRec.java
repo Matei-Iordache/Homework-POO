@@ -95,5 +95,6 @@ public class PopularRec {
                 }
             }
         }
+        Helper.writeToOutput(action,"PopularRecommendation cannot be applied!");
     }
 }

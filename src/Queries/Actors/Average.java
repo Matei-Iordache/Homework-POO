@@ -25,10 +25,14 @@ public class Average {
         for (ActorInputData actor: Actors) {
             ArrayList<String> playedFilms = actor.getFilmography();
             double Rating = 0;
+            int cock = 0;
             for (MovieInputData movie: Movies) {
                 for (String film: playedFilms) {
                     if (film.equals(movie.getTitle())) {
                         Rating += Helper.getRatingMovie(Users, movie);
+                        if (Helper.getRatingMovie(Users, movie) != 0) {
+                            cock++;
+                        }
                         break;
                     }
                 }
@@ -37,13 +41,19 @@ public class Average {
                 for (String film: playedFilms) {
                     if (film.equals(show.getTitle())) {
                         Rating += Helper.getRatingShow(Users, show);
+                        if (Helper.getRatingShow(Users, show) != 0) {
+                            cock++;
+                        }
                         break;
                     }
                 }
             }
-            rates.put(actor.getName(), Rating);
+            if (cock != 0) {
+                //System.out.println(Rating);
+                Rating = Rating / cock;
+                rates.put(actor.getName(), Rating);
+            }
         }
-
         rates.values().removeAll(Collections.singleton(0.0));
         Map<String, Double> rates2 = new LinkedHashMap<>();
         if (action.getSortType().equals("asc")) {
@@ -57,10 +67,12 @@ public class Average {
                     .sorted(Map.Entry.<String, Double>comparingByValue(Comparator.reverseOrder()).thenComparing(Map.Entry.comparingByKey(Comparator.reverseOrder())))
                     .forEachOrdered(x -> rates2.put(x.getKey(), x.getValue()));
         }
+
         ArrayList<String> Actors = new ArrayList<>(rates2.keySet());
         if (action.getNumber() < Actors.size()) {
             Actors.subList(action.getNumber(),Actors.size()).clear();
         }
+        System.out.println(Actors);
         Helper.writeToOutput(action, "Query result: " + Actors);
     }
 }

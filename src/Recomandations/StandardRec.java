@@ -39,5 +39,6 @@ public class StandardRec {
                 return;
             }
         }
+        Helper.writeToOutput(action,"StandardRecommendation cannot be applied!");
     }
 }

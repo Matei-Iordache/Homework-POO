@@ -30,8 +30,25 @@ public class FavoriteMovieQuery {
                 }
             }
         }
-        Helper.FavoriteQuerySort(filteredMovies, action);
+        // Helper.FavoriteQuerySort(filteredMovies, action);
+        Map<String, Integer> FilteredSorted = new LinkedHashMap<>();
+
+        if (action.getSortType().equals("asc")) {
+            filteredMovies.entrySet()
+                    .stream()
+                    .sorted(Map.Entry.<String, Integer>comparingByValue().thenComparing(Map.Entry.comparingByKey()))
+                    .forEachOrdered(x -> FilteredSorted.put(x.getKey(), x.getValue()));
+        } else {
+            filteredMovies.entrySet()
+                    .stream()
+                    .sorted(Map.Entry.<String, Integer>comparingByValue(Comparator.reverseOrder()).thenComparing(Map.Entry.comparingByKey(Comparator.reverseOrder())))
+                    .forEachOrdered(x -> FilteredSorted.put(x.getKey(), x.getValue()));
+        }
+        ArrayList<String> movies = new ArrayList<>(FilteredSorted.keySet());
+        if (action.getNumber() < movies.size()) {
+            movies.subList(action.getNumber(),movies.size()).clear();
+        }
         filteredMovies.values().removeAll(Collections.singleton(0));
-        Helper.writeToOutput(action,"Query result: " + filteredMovies.keySet());
+        Helper.writeToOutput(action,"Query result: " + movies);
     }
 }

@@ -78,5 +78,6 @@ public class BestUnseenRec {
                 return;
             }
         }
+        Helper.writeToOutput(action,"BestRatedUnseenRecommendation cannot be applied!");
     }
 }

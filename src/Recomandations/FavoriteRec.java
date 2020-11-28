@@ -40,33 +40,21 @@ public class FavoriteRec {
                 }
             }
         }
+        ArrayList<String> movieName = new ArrayList<>();
+        for (MovieInputData movie: movies) {
+            movieName.add(movie.getTitle());
+        }
         HashMap<String, Integer> favoriteVideosSorted = new LinkedHashMap<>();
         favoriteVideos.entrySet()
                 .stream()
-                .sorted(Map.Entry.<String, Integer>comparingByValue(Comparator.reverseOrder())
-                        .thenComparing(Map.Entry.comparingByKey(Comparator.reverseOrder())))
+                .sorted(Map.Entry.<String, Integer>comparingByValue(Comparator.reverseOrder()))
                 .forEachOrdered(x -> favoriteVideosSorted.put(x.getKey(), x.getValue()));
         ArrayList<String> favoriteVideosSortedList = new ArrayList<>(favoriteVideosSorted.keySet());
-        // System.out.println(favoriteVideosSorted);
 
         Map<String, Integer> history = user1.getHistory();
         for (String favorite: favoriteVideosSortedList) {
             if (!history.containsKey(favorite)) {
                 Helper.writeToOutput(action, "FavoriteRecommendation result: " + favorite);
-                return;
-            }
-        }
-
-        for (MovieInputData movie : movies) {
-            if (!history.containsKey(movie.getTitle())) {
-                Helper.writeToOutput(action, "StandardRecommendation result: " + movie.getTitle());
-                return;
-            }
-        }
-
-        for (SerialInputData show : shows) {
-            if (!history.containsKey(show.getTitle())) {
-                Helper.writeToOutput(action, "StandardRecommendation result: " + show.getTitle());
                 return;
             }
         }
