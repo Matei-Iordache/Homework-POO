@@ -1,12 +1,17 @@
 package Queries.Users;
 
 import Commands.Helper;
+import Utilities.Sort;
 import fileio.ActionInputData;
 import fileio.UserInputData;
 
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * Provides a method to obtain the most active users.
+ * User activity consists of rating shows.
+ */
 public class NumberOfRatings {
     List<UserInputData> users;
 
@@ -14,6 +19,12 @@ public class NumberOfRatings {
         this.users = users;
     }
 
+    /**
+     * Gives to output a list of the most active users,
+     * sorted in ascending or descending order.
+     * @param action requested action
+     * @throws IOException in case of exceptions to reading / writing
+     */
     public void getMostActiveUsers(ActionInputData action) throws IOException {
         HashMap<String, Integer> usersWithRating = new HashMap<>();
         for (UserInputData user: users) {
@@ -21,20 +32,9 @@ public class NumberOfRatings {
         }
 
         usersWithRating.values().removeAll(Collections.singleton(0));
-        Map<String, Integer> FilteredSorted = new LinkedHashMap<>();
+        LinkedHashMap<String, Integer> sortedUsers = Sort.sortIntegerMap(usersWithRating, action);
 
-        if (action.getSortType().equals("asc")) {
-            usersWithRating.entrySet()
-                    .stream()
-                    .sorted(Map.Entry.<String, Integer>comparingByValue().thenComparing(Map.Entry.comparingByKey()))
-                    .forEachOrdered(x -> FilteredSorted.put(x.getKey(), x.getValue()));
-        } else {
-            usersWithRating.entrySet()
-                    .stream()
-                    .sorted(Map.Entry.<String, Integer>comparingByValue(Comparator.reverseOrder()).thenComparing(Map.Entry.comparingByKey(Comparator.reverseOrder())))
-                    .forEachOrdered(x -> FilteredSorted.put(x.getKey(), x.getValue()));
-        }
-        ArrayList<String> users = new ArrayList<>(FilteredSorted.keySet());
+        ArrayList<String> users = new ArrayList<>(sortedUsers.keySet());
         if (action.getNumber() < users.size()) {
             users.subList(action.getNumber(),users.size()).clear();
         }

@@ -7,6 +7,11 @@ import fileio.ActorInputData;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * Provides a method which adds to output
+ * a list of actors who have certain words
+ * in their carer description
+ */
 public class FilterDescription {
     List<ActorInputData> actors;
 
@@ -14,6 +19,11 @@ public class FilterDescription {
         this.actors = actors;
     }
 
+    /**
+     * Make a list of actors that have certain words in their description
+     * @param action requested action
+     * @throws IOException in case of exceptions to reading / writing
+     */
     public void getFilterQuery(ActionInputData action) throws IOException {
         List<String> filters = action.getFilters().get(2);
         ArrayList<String> actorsWithFilters = new ArrayList<>();

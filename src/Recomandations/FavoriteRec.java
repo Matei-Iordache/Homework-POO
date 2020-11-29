@@ -9,6 +9,9 @@ import fileio.UserInputData;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * Provides the favorite recommendation method
+ */
 public class FavoriteRec {
     List<UserInputData> users;
     List<MovieInputData> movies;
@@ -20,6 +23,12 @@ public class FavoriteRec {
         this.shows = shows;
     }
 
+    /**
+     * Recommends the video that was the most added in the
+     * favorite list of the uses
+     * @param action type of action
+     * @throws IOException in case of exceptions to reading / writing
+     */
     public void gerFavoriteRec(ActionInputData action) throws IOException {
         UserInputData user1 = Helper.findUser(users, action);
         assert user1 != null;
@@ -29,20 +38,11 @@ public class FavoriteRec {
         }
         HashMap<String, Integer> favoriteVideos = new HashMap<>();
 
-        for (UserInputData user: users) {
+        for (UserInputData user : users) {
             ArrayList<String> favorites = user.getFavoriteMovies();
             for (String favorite : favorites) {
-                if (favoriteVideos.containsKey(favorite)) {
-                    int value = favoriteVideos.get(favorite);
-                    favoriteVideos.replace(favorite, value + 1);
-                } else {
-                    favoriteVideos.put(favorite, 1);
-                }
+                    favoriteVideos.merge(favorite, 1, Integer::sum);
             }
-        }
-        ArrayList<String> movieName = new ArrayList<>();
-        for (MovieInputData movie: movies) {
-            movieName.add(movie.getTitle());
         }
         HashMap<String, Integer> favoriteVideosSorted = new LinkedHashMap<>();
         favoriteVideos.entrySet()

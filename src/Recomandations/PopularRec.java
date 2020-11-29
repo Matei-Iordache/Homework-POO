@@ -9,6 +9,9 @@ import fileio.UserInputData;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * Provides the Popular recommendation method
+ */
 public class PopularRec {
     List<UserInputData> users;
     List<MovieInputData> movies;
@@ -20,6 +23,11 @@ public class PopularRec {
         this.shows = shows;
     }
 
+    /**
+     * finds the most unseen video from the most popular genre
+     * @param action type of action
+     * @throws IOException in case of exceptions to reading / writing
+     */
     public void getPopular(ActionInputData action) throws IOException {
         UserInputData user1 = Helper.findUser(users, action);
         assert user1 != null;
@@ -69,7 +77,7 @@ public class PopularRec {
         genresPopularity.entrySet()
                 .stream()
                 .sorted(Map.Entry.<String, Integer>comparingByValue(Comparator.reverseOrder())
-                        .thenComparing(Map.Entry.comparingByKey(Comparator.reverseOrder())))
+                .thenComparing(Map.Entry.comparingByKey(Comparator.reverseOrder())))
                 .forEachOrdered(x -> genresPopularitySorted.put(x.getKey(), x.getValue()));
         ArrayList<String> genresPopularitySortedList = new ArrayList<>(genresPopularitySorted.keySet());
 

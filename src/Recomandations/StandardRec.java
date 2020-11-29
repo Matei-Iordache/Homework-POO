@@ -10,6 +10,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Provides the standard recommendation method
+ */
 public class StandardRec {
     List<UserInputData> users;
     List<MovieInputData> movies;
@@ -21,6 +24,11 @@ public class StandardRec {
         this.shows = shows;
     }
 
+    /**
+     * Method which returns the first unseen video
+     * @param action type of action
+     * @throws IOException in case of exceptions to reading / writing
+     */
     public void getStandardRec(ActionInputData action) throws IOException {
         UserInputData user = Helper.findUser(users, action);
         assert user != null;

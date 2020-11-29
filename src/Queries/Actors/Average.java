@@ -1,11 +1,16 @@
 package Queries.Actors;
 
 import Commands.Helper;
+import Utilities.Sort;
 import fileio.*;
 
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * Provides a method to obtain the actors
+ * with the highest or the lowest average ratings
+ */
 public class Average {
     private final List<ActorInputData> Actors;
     private final List<UserInputData> Users;
@@ -20,57 +25,56 @@ public class Average {
         this.Shows = Shows;
     }
 
+    /**
+     * Method provides a sorted list of the actors that have
+     * the highest or the lowest rated movies.
+     * Method obtains the average rating of an actor and stores it
+     * in a hashtable.
+     * Then sort the hashtable in ascending or descending order.
+     * And finally concert the keys of the hashtable into a list
+     * and pass it to output.
+     * @param action requested action
+     * @throws IOException in case of exceptions to reading / writing
+     */
     public void getAverage(ActionInputData action) throws IOException {
         HashMap<String, Double> rates = new HashMap<>();
         for (ActorInputData actor: Actors) {
             ArrayList<String> playedFilms = actor.getFilmography();
-            double Rating = 0;
-            int cock = 0;
+            double rating = 0; // sum of the ratings of an actor
+            int counter = 0; // no_times a rating is not 0
+
+            // get rating for the movies an actor played in
             for (MovieInputData movie: Movies) {
-                for (String film: playedFilms) {
-                    if (film.equals(movie.getTitle())) {
-                        Rating += Helper.getRatingMovie(Users, movie);
-                        if (Helper.getRatingMovie(Users, movie) != 0) {
-                            cock++;
-                        }
-                        break;
+                if (playedFilms.contains(movie.getTitle())) {
+                    rating += Helper.getRatingMovie(Users, movie);
+                    if (Helper.getRatingMovie(Users, movie) != 0) {
+                        counter++;
                     }
                 }
             }
+            // get rating for the shows an actor played in
             for (SerialInputData show: Shows) {
-                for (String film: playedFilms) {
-                    if (film.equals(show.getTitle())) {
-                        Rating += Helper.getRatingShow(Users, show);
-                        if (Helper.getRatingShow(Users, show) != 0) {
-                            cock++;
-                        }
-                        break;
+                if (playedFilms.contains(show.getTitle())) {
+                    rating += Helper.getRatingShow(Users, show);
+                    if (Helper.getRatingShow(Users, show) != 0) {
+                        counter++;
                     }
                 }
             }
-            if (cock != 0) {
-                //System.out.println(Rating);
-                Rating = Rating / cock;
-                rates.put(actor.getName(), Rating);
+
+            if (counter != 0) {
+                rating /= counter;
+                rates.put(actor.getName(), rating);
             }
-        }
-        Map<String, Double> rates2 = new LinkedHashMap<>();
-        if (action.getSortType().equals("asc")) {
-            rates.entrySet()
-                    .stream()
-                    .sorted(Map.Entry.<String, Double>comparingByValue().thenComparing(Map.Entry.comparingByKey()))
-                    .forEachOrdered(x -> rates2.put(x.getKey(), x.getValue()));
-        } else {
-            rates.entrySet()
-                    .stream()
-                    .sorted(Map.Entry.<String, Double>comparingByValue(Comparator.reverseOrder()).thenComparing(Map.Entry.comparingByKey(Comparator.reverseOrder())))
-                    .forEachOrdered(x -> rates2.put(x.getKey(), x.getValue()));
         }
 
-        ArrayList<String> Actors = new ArrayList<>(rates2.keySet());
-        if (action.getNumber() < Actors.size()) {
-            Actors.subList(action.getNumber(),Actors.size()).clear();
+        LinkedHashMap<String, Double> ratesSorted = Sort.sortDoubleMap(rates, action);
+
+        // sorted ratings in form of a list
+        ArrayList<String> ratesList = new ArrayList<>(ratesSorted.keySet());
+        if (action.getNumber() < ratesList.size()) {
+            ratesList.subList(action.getNumber(),ratesList.size()).clear();
         }
-        Helper.writeToOutput(action, "Query result: " + Actors);
+        Helper.writeToOutput(action, "Query result: " + ratesList);
     }
 }

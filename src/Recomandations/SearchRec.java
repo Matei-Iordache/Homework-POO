@@ -9,6 +9,9 @@ import fileio.UserInputData;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * Provides the Search Recommendation method
+ */
 public class SearchRec {
     List<UserInputData> users;
     List<MovieInputData> movies;
@@ -20,6 +23,12 @@ public class SearchRec {
         this.shows = shows;
     }
 
+    /**
+     * Makes a list of all the videos unseen from a genre
+     * sorted in ascendent order by the rating
+     * @param action type of action
+     * @throws IOException in case of exceptions to reading / writing
+     */
     public void getSearchRec(ActionInputData action) throws IOException {
         UserInputData user = Helper.findUser(users, action);
         assert user != null;

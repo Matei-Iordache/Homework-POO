@@ -9,8 +9,21 @@ import fileio.UserInputData;
 import java.util.HashMap;
 import java.util.List;
 
+
+/**
+ * Provides various methods that filter videos
+ * based on the type of action requested
+ */
 public class Filters {
 
+    /**
+     * Method makes a hashmap of movies (and their ratings) that have the
+     * specified genre and have been released in the specified year
+     * @param movies List of movies in the database
+     * @param action requested action
+     * @param users list of users in database
+     * @return Hashmap of filtered movies
+     */
     public static HashMap<String, Double> filteredMovies(List<MovieInputData> movies, ActionInputData action,
                                                          List<UserInputData> users) {
         String filterYear = action.getFilters().get(0).get(0);
@@ -39,6 +52,13 @@ public class Filters {
         return filteredMovies;
     }
 
+    /**
+     * Method makes a hashmap of movies that have the
+     * specified genre and have been released in the specified year
+     * @param movies List of movies in the database
+     * @param action requested action
+     * @return Hashmap of filtered movies
+     */
     public static HashMap<String, Integer> filteredMovies(List<MovieInputData> movies, ActionInputData action) {
         String filterYear = action.getFilters().get(0).get(0);
         String filterGenre = action.getFilters().get(1).get(0);
@@ -66,6 +86,15 @@ public class Filters {
         return filteredMovies;
     }
 
+
+    /**
+     * Method makes a hashmap of shows (and their ratings) that have the
+     * specified genre and have been released in the specified year
+     * @param shows List of shows in the database
+     * @param action requested action
+     * @param users list of users in database
+     * @return Hashmap of filtered movies
+     */
     public static HashMap<String, Double> filteredShows(List<SerialInputData> shows, ActionInputData action,
                                                         List<UserInputData> users) {
         String filterYear = action.getFilters().get(0).get(0);
@@ -94,6 +123,14 @@ public class Filters {
         return filteredShows;
     }
 
+
+    /**
+     * Method makes a hashmap of shows (and their ratings) that have the
+     * specified genre and have been released in the specified year
+     * @param shows List of shows in the database
+     * @param action requested action
+     * @return Hashmap of filtered movies
+     */
     public static HashMap<String, Integer> filteredShows(List<SerialInputData> shows, ActionInputData action) {
         String filterYear = action.getFilters().get(0).get(0);
         String filterGenre = action.getFilters().get(1).get(0);

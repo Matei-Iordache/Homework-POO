@@ -2,12 +2,16 @@ package Queries.Video;
 
 import Commands.Helper;
 import Utilities.Filters;
+import Utilities.Sort;
 import fileio.ActionInputData;
 import fileio.MovieInputData;
 
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * Provides a method to obtain a list with the longest or shortest movies
+ */
 public class LongestMovieQuery {
     List<MovieInputData> movies;
 
@@ -15,30 +19,23 @@ public class LongestMovieQuery {
         this.movies = movies;
     }
 
+    /**
+     * Make a list with the longest or shortest movies in the database
+     * @param action type of action
+     * @throws IOException in case of exceptions to reading / writing
+     */
     public void getLongestMovieQuery(ActionInputData action) throws IOException {
 
-        HashMap<String, Integer> Filtered = Filters.filteredMovies(movies,action);
+        HashMap<String, Integer> filtered = Filters.filteredMovies(movies,action);
 
         for (MovieInputData movie : movies) {
-            if (Filtered.containsKey(movie.getTitle())) {
-                Filtered.replace(movie.getTitle(),movie.getDuration());
+            if (filtered.containsKey(movie.getTitle())) {
+                filtered.replace(movie.getTitle(),movie.getDuration());
             }
         }
-        Filtered.values().removeAll(Collections.singleton(0));
-        Map<String, Integer> FilteredSorted = new LinkedHashMap<>();
-
-        if (action.getSortType().equals("asc")) {
-            Filtered.entrySet()
-                    .stream()
-                    .sorted(Map.Entry.<String, Integer>comparingByValue().thenComparing(Map.Entry.comparingByKey()))
-                    .forEachOrdered(x -> FilteredSorted.put(x.getKey(), x.getValue()));
-        } else {
-            Filtered.entrySet()
-                    .stream()
-                    .sorted(Map.Entry.<String, Integer>comparingByValue(Comparator.reverseOrder()).thenComparing(Map.Entry.comparingByKey(Comparator.reverseOrder())))
-                    .forEachOrdered(x -> FilteredSorted.put(x.getKey(), x.getValue()));
-        }
-        ArrayList<String> movies = new ArrayList<>(FilteredSorted.keySet());
+        filtered.values().removeAll(Collections.singleton(0));
+        var filteredSorted = Sort.sortIntegerMap(filtered, action);
+        ArrayList<String> movies = new ArrayList<>(filteredSorted.keySet());
         if (action.getNumber() < movies.size()) {
             movies.subList(action.getNumber(),movies.size()).clear();
         }

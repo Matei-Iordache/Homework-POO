@@ -5,10 +5,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.io.IOException;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Helper {
     private static Writer fileWriter;
@@ -17,25 +14,6 @@ public class Helper {
     public static void writeToOutput(ActionInputData action, String message) throws IOException {
         JSONObject obj = fileWriter.writeFile(action.getActionId(), null, message);
         arrayResult.add(obj);
-    }
-
-    /**
-     * Add javadoc later
-     * @param filteredMovies Hashmap of filtered movies that needs
-     *                       to be sorted
-     */
-    public static void FavoriteQuerySort(Map<String, Integer> filteredMovies, ActionInputData action) {
-        if (action.getSortType().equals("asc")) {
-            filteredMovies.entrySet()
-                    .stream()
-                    .sorted(Map.Entry.comparingByValue())
-                    .forEachOrdered(x -> filteredMovies.put(x.getKey(), x.getValue()));
-        } else { // sort the list descending value
-            filteredMovies.entrySet()
-                    .stream()
-                    .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                    .forEachOrdered(x -> filteredMovies.put(x.getKey(), x.getValue()));
-        }
     }
 
     /**

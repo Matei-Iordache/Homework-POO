@@ -9,6 +9,9 @@ import fileio.UserInputData;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * Provides the BestUnseenRecommendation method
+ */
 public class BestUnseenRec {
     List<UserInputData> users;
     List<MovieInputData> movies;
@@ -20,6 +23,11 @@ public class BestUnseenRec {
         this.shows = shows;
     }
 
+    /**
+     * Adds to output the best rated unseen movie
+     * @param action type of action
+     * @throws IOException in case of exceptions to reading / writing
+     */
     public void getBestUnseenRec(ActionInputData action) throws IOException {
         UserInputData user = Helper.findUser(users, action);
         HashMap<String, Double> ratedMovies = new HashMap<>();
@@ -34,6 +42,7 @@ public class BestUnseenRec {
         }
         ratedShows.values().removeAll(Collections.singleton(0.0));
 
+        // sort descendent
         Map<String, Double> SortedMovies = new LinkedHashMap<>();
         ratedMovies.entrySet()
                     .stream()
@@ -42,6 +51,7 @@ public class BestUnseenRec {
                     .forEachOrdered(x -> SortedMovies.put(x.getKey(), x.getValue()));
         ArrayList<String> sortedMoviesList = new ArrayList<>(SortedMovies.keySet());
 
+        // sort descendent
         Map<String, Double> SortedShows = new LinkedHashMap<>();
         ratedShows.entrySet()
                 .stream()
