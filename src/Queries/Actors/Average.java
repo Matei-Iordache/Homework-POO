@@ -54,7 +54,6 @@ public class Average {
                 rates.put(actor.getName(), Rating);
             }
         }
-        rates.values().removeAll(Collections.singleton(0.0));
         Map<String, Double> rates2 = new LinkedHashMap<>();
         if (action.getSortType().equals("asc")) {
             rates.entrySet()
@@ -72,7 +71,6 @@ public class Average {
         if (action.getNumber() < Actors.size()) {
             Actors.subList(action.getNumber(),Actors.size()).clear();
         }
-        System.out.println(Actors);
         Helper.writeToOutput(action, "Query result: " + Actors);
     }
 }

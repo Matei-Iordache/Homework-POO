@@ -27,19 +27,20 @@ public final class UserInputData {
      */
     private final ArrayList<String> favoriteMovies;
 
-    private HashMap<String, Double> Rated = new HashMap<>();
+    /**
+     * Ratings a user gave to certain shows
+     */
+    private HashMap<String, Double> rated = new HashMap<>();
 
+    /**
+     * Check if a show was rated or not
+     */
     private HashMap<String, Integer> check = new HashMap<>();
 
-    private int NumberOfRated = 0;
-
-    public int getNumberOfRated() {
-        return NumberOfRated;
-    }
-
-    public void setNumberOfRated(int numberOfRated) {
-        NumberOfRated = numberOfRated;
-    }
+    /**
+     * Number of ratings a user gave
+     */
+    private int numberOfRated = 0;
 
     public UserInputData(final String username, final String subscriptionType,
                          final Map<String, Integer> history,
@@ -67,7 +68,19 @@ public final class UserInputData {
     }
 
     public HashMap<String, Double> getRated() {
-        return Rated;
+        return rated;
+    }
+
+    public HashMap<String, Integer> getCheck() {
+        return check;
+    }
+
+    public int getNumberOfRated() {
+        return numberOfRated;
+    }
+
+    public void setNumberOfRated(int numberOfRated) {
+        this.numberOfRated = numberOfRated;
     }
 
     @Override
@@ -77,9 +90,5 @@ public final class UserInputData {
                 + subscriptionType + '\'' + ", history="
                 + history + ", favoriteMovies="
                 + favoriteMovies + '}';
-    }
-
-    public HashMap<String, Integer> getCheck() {
-        return check;
     }
 }

@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Provides a method which lets a user add a video
+ * to his favorite list.
+ */
 public class Favorite {
     private final List<UserInputData> Users;
     public Favorite(List<UserInputData> Users) {
@@ -24,15 +28,14 @@ public class Favorite {
                                throws IOException {
         UserInputData user = Helper.findUser(Users, action);
         assert user != null: "user is null";
-        ArrayList<String> favorites = user.getFavoriteMovies(); // list of favorite movies
-        Map<String, Integer> history = user.getHistory(); // history of viewed movies
+        ArrayList<String> favorites = user.getFavoriteMovies();
+        Map<String, Integer> history = user.getHistory();
+
         // check if the movie is seen
-        if (history.get(action.getTitle()) != null) {
-            for (String movie: favorites) {
-                if (action.getTitle().equals(movie)) {
-                    addToOutput("Already in favorites", action);
-                    return;
-                }
+        if (history.containsKey(action.getTitle())) {
+            if (favorites.contains(action.getTitle())) {
+                addToOutput("Already in favorites", action);
+                return;
             }
             favorites.add(action.getTitle());
             addToOutput("Add to favorites", action);
@@ -40,6 +43,13 @@ public class Favorite {
             addToOutput("Not seen", action);
         }
     }
+
+    /**
+     * Constructs the appropriate message and sends it to output.
+     * @param cases tells the switch of what case to go
+     * @param action requested action
+     * @throws IOException in case of exceptions to reading / writing
+     */
     private void addToOutput(final String cases, final ActionInputData action)
                             throws IOException {
         String message = switch (cases) {

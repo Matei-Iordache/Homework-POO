@@ -19,14 +19,6 @@ public class Helper {
         arrayResult.add(obj);
     }
 
-    public static void setFileWriter(Writer fileWriter) {
-        Helper.fileWriter = fileWriter;
-    }
-
-    public static void setArrayResult(JSONArray arrayResult) {
-        Helper.arrayResult = arrayResult;
-    }
-
     /**
      * Add javadoc later
      * @param filteredMovies Hashmap of filtered movies that needs
@@ -38,8 +30,7 @@ public class Helper {
                     .stream()
                     .sorted(Map.Entry.comparingByValue())
                     .forEachOrdered(x -> filteredMovies.put(x.getKey(), x.getValue()));
-            // sort the list descending value
-        } else {
+        } else { // sort the list descending value
             filteredMovies.entrySet()
                     .stream()
                     .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
@@ -47,6 +38,12 @@ public class Helper {
         }
     }
 
+    /**
+     * Method looks in the user database for a specific user
+     * @param users list of user in the database
+     * @param action requested action
+     * @return the user that requested the action
+     */
     public static UserInputData findUser(List<UserInputData> users, ActionInputData action) {
         for (UserInputData user : users) {
             if (user.getUsername().equals(action.getUsername())) {
@@ -57,6 +54,13 @@ public class Helper {
         return null;
     }
 
+    /**
+     * Method calculates the average rating of a movie
+     * based on the ratings of all users in the database
+     * @param Users list of user in the database
+     * @param movie that needs to get the average rating
+     * @return average rating
+     */
     public static double getRatingMovie(List<UserInputData> Users, MovieInputData movie) {
         double TotalRating = 0;
         double nrRating = 0;
@@ -73,6 +77,13 @@ public class Helper {
         return TotalRating/nrRating;
     }
 
+    /**
+     * Method calculates the average rating of a show
+     * based on the ratings of all users in the database
+     * @param Users list of user in the database
+     * @param show that needs to get the average rating
+     * @return average rating
+     */
     public static double getRatingShow(List<UserInputData> Users, SerialInputData show) {
         double TotalRating = 0;
         double nrRating = 0;
@@ -87,5 +98,13 @@ public class Helper {
             return 0;
         }
         return TotalRating/nrRating;
+    }
+
+    public static void setFileWriter(Writer fileWriter) {
+        Helper.fileWriter = fileWriter;
+    }
+
+    public static void setArrayResult(JSONArray arrayResult) {
+        Helper.arrayResult = arrayResult;
     }
 }

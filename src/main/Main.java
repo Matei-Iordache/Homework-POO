@@ -1,9 +1,7 @@
 package main;
 
-import Commands.Favorite;
+import Commands.Command;
 import Commands.Helper;
-import Commands.Rating;
-import Commands.View;
 import Queries.Actors.Average;
 import Queries.Actors.Awards;
 import Queries.Actors.FilterDescription;
@@ -89,24 +87,8 @@ public final class Main {
         Helper.setArrayResult(arrayResult);
         for (ActionInputData action : Actions) {
             if (action.getActionType().equals("command")) {
-                if (action.getType().equals("favorite")) {
-                    Favorite favorite = new Favorite(Users);
-                    favorite.addToFavorites(action);
-                }
-                if (action.getType().equals("view")) {
-                    View view = new View(Users);
-                    view.addToViewed(action);
-                }
-                if (action.getType().equals("rating")) {
-                    int seasons = 0;
-                    for (SerialInputData x: Shows) {
-                        if (x.getTitle().equals(action.getTitle())) {
-                            seasons = x.getNumberSeason();
-                        }
-                    }
-                    Rating rating = new Rating(Users);
-                    rating.addRating(action, seasons);
-                }
+                Command command = new Command(Users, Shows);
+                command.execute(action);
             }
             if (action.getActionType().equals("query")) {
                 if (action.getObjectType().equals("actors")) {

@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Provides a method which allows a user to rate a video
+ */
 public class Rating {
 
     List<UserInputData> Users;
@@ -16,30 +19,40 @@ public class Rating {
         this.Users = Users;
     }
 
+    /**
+     * Rate a video.
+     * The video can't be rated if it was not seen or already rated
+     * The user can rate multiple seasons of a show.
+     * @param action requested action
+     * @param seasons the seasons of a show
+     *                If it is a movie, seasons will be 0
+     * @throws IOException in case of exceptions to reading / writing
+     */
     public void addRating(final ActionInputData action, int seasons) throws IOException {
         UserInputData user = Helper.findUser(Users, action);
-        // map with the ratings a user gave to a show/movie
-        assert user != null : "user is null";
-        HashMap<String, Double> rated = user.getRated();
-        // map to check if a movie/show season was rated or not
-        HashMap<String, Integer> check = user.getCheck();
-        // history of the user
+        assert user != null;
         Map<String, Integer> history = user.getHistory();
-        if (history.get(action.getTitle()) != null) {
+
+        // ratings a user gave to a show/movie
+        HashMap<String, Double> rated = user.getRated();
+
+        // check if a movie/show season was rated or not
+        HashMap<String, Integer> check = user.getCheck();
+
+        if (history.containsKey(action.getTitle())) {
             if (check.containsKey(action.getTitle()+action.getSeasonNumber())) {
                 addToOutput("AlreadyRated", action);
                 return;
             }
             addToOutput("RateMovie", action);
-            int x = user.getNumberOfRated();
-            user.setNumberOfRated(x + 1);
+            user.setNumberOfRated(user.getNumberOfRated() + 1);
             if (action.getSeasonNumber() == 0) { // if it is a movie
                 rated.put(action.getTitle(),action.getGrade());
                 check.put(action.getTitle() + 0, 1);
             } else { // if it is a show
                 if (rated.containsKey(action.getTitle())) { // if the show was rated before
-                    Double value = rated.get(action.getTitle()); // previous value of a show over all seasons
-                    rated.replace(action.getTitle(), value + action.getGrade()/seasons); // new value
+                    Double value = rated.get(action.getTitle());
+                    rated.replace(action.getTitle(), value + action.getGrade()/seasons);
                 } else { // if the show was never rated
                     rated.put(action.getTitle(), action.getGrade()/seasons);
                     check.put(action.getTitle()+action.getSeasonNumber(), 1);
@@ -49,6 +62,14 @@ public class Rating {
             addToOutput("not seen", action);
         }
     }
+
+    /**
+     * Constructs the appropriate message and sends
+     * it to output.
+     * @param cases tells the switch of what case to go
+     * @param action requested action
+     * @throws IOException in case of exceptions to reading / writing
+     */
     private void addToOutput(final String cases, final ActionInputData action)
                             throws IOException {
 
