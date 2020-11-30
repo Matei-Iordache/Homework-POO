@@ -17,6 +17,11 @@ public final class Test {
     private Test() {
     }
 
+    /**
+     * Main method
+     * @param args parameters
+     * @throws IOException in case of error
+     */
     public static void main(final String[] args) throws IOException {
         File directory = new File(Constants.TESTS_PATH);
         File[] inputDir = directory.listFiles();

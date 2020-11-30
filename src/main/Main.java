@@ -1,17 +1,20 @@
 package main;
 
-import Commands.Command;
-import Commands.Helper;
-import Queries.Actors.Average;
-import Queries.Actors.Awards;
-import Queries.Actors.FilterDescription;
-import Queries.Users.NumberOfRatings;
-import Queries.Video.*;
-import Recomandations.*;
+import commands.Command;
+import utilities.Helper;
+import fileio.ActionInputData;
+import fileio.ActorInputData;
+import fileio.Input;
+import fileio.InputLoader;
+import fileio.MovieInputData;
+import fileio.SerialInputData;
+import fileio.UserInputData;
+import fileio.Writer;
+import queries.Query;
+import recommendation.Recommendation;
 import checker.Checker;
 import checker.Checkstyle;
 import common.Constants;
-import fileio.*;
 import org.json.simple.JSONArray;
 
 import java.io.File;
@@ -78,97 +81,25 @@ public final class Main {
         JSONArray arrayResult = new JSONArray();
 
         //TODO add here the entry point to your implementation
-        List<ActionInputData> Actions = input.getCommands();
-        List<UserInputData> Users = input.getUsers();
-        List<ActorInputData> Actors = input.getActors();
-        List<MovieInputData> Movies = input.getMovies();
-        List<SerialInputData> Shows = input.getSerials();
+        List<ActionInputData> actions = input.getCommands();
+        List<UserInputData> users = input.getUsers();
+        List<ActorInputData> actors = input.getActors();
+        List<MovieInputData> movies = input.getMovies();
+        List<SerialInputData> shows = input.getSerials();
         Helper.setFileWriter(fileWriter);
         Helper.setArrayResult(arrayResult);
-        for (ActionInputData action : Actions) {
+        for (ActionInputData action : actions) {
             if (action.getActionType().equals("command")) {
-                Command command = new Command(Users, Shows);
+                Command command = new Command(users, shows);
                 command.execute(action);
             }
             if (action.getActionType().equals("query")) {
-                if (action.getObjectType().equals("actors")) {
-                    if (action.getCriteria().equals("awards")) {
-                        Awards awards = new Awards(Actors);
-                        awards.FilterAwards(action);
-                    }
-                    if (action.getCriteria().equals("average")) {
-                        Average average = new Average(Actors,Users,Movies,Shows);
-                        average.getAverage(action);
-                    }
-                    if (action.getCriteria().equals("filter_description")) {
-                        FilterDescription filterDescription = new FilterDescription(Actors);
-                        filterDescription.getFilterQuery(action);
-                    }
-                }
-                if (action.getObjectType().equals("movies")) {
-                    if (action.getCriteria().equals("favorite")) {
-                        FavoriteMovieQuery favoriteMovieQuery = new FavoriteMovieQuery(Users, Movies);
-                        favoriteMovieQuery.FilterFavorite(action);
-                    }
-                    if (action.getCriteria().equals("ratings")) {
-                        RatingMovieQuery ratingMovieQuery = new RatingMovieQuery(Movies, Users);
-                        ratingMovieQuery.getRatingMovieQuery(action);
-                    }
-                    if (action.getCriteria().equals("longest")) {
-                        LongestMovieQuery longestMovieQuery = new LongestMovieQuery(Movies);
-                        longestMovieQuery.getLongestMovieQuery(action);
-                    }
-                    if (action.getCriteria().equals("most_viewed")) {
-                        MostViewedMovieQuery mostViewedMovieQuery = new MostViewedMovieQuery(Movies, Users);
-                        mostViewedMovieQuery.getMostViewedMovie(action);
-                    }
-                }
-                if (action.getObjectType().equals("shows")) {
-                    if (action.getCriteria().equals("favorite")) {
-                        FavoriteShowQuery favoriteShowQuery = new FavoriteShowQuery(Users, Shows);
-                        favoriteShowQuery.FilterFavorite(action);
-                    }
-                    if (action.getCriteria().equals("ratings")) {
-                        RatingShowQuery ratingMovieQuery = new RatingShowQuery(Shows, Users);
-                        ratingMovieQuery.getRatingShowQuery(action);
-                    }
-                    if (action.getCriteria().equals("longest")) {
-                        LongestShowQuery longestShowQuery = new LongestShowQuery(Shows);
-                        longestShowQuery.getLongestShowQuery(action);
-                    }
-                    if (action.getCriteria().equals("most_viewed")) {
-                        MostViewedShowQuery mostViewedShowQuery = new MostViewedShowQuery(Shows, Users);
-                        mostViewedShowQuery.getMostViewedShowQuery(action);
-                    }
-                }
-                if(action.getObjectType().equals("users")) {
-                    if (action.getCriteria().equals("num_ratings")) {
-                        NumberOfRatings numberOfRatings = new NumberOfRatings(Users);
-                        numberOfRatings.getMostActiveUsers(action);
-                    }
-                }
+                Query query = new Query(users, shows, movies, actors);
+                query.execute(action);
             }
             if (action.getActionType().equals("recommendation")) {
-                if (action.getType().equals("standard")) {
-                    StandardRec standardRec = new StandardRec(Users,Movies,Shows);
-                    standardRec.getStandardRec(action);
-                }
-                if (action.getType().equals("best_unseen")) {
-                    BestUnseenRec bestUnseenRec = new BestUnseenRec(Users, Movies, Shows);
-                    bestUnseenRec.getBestUnseenRec(action);
-                }
-                if (action.getType().equals("search")) {
-                    SearchRec searchRec = new SearchRec(Users, Movies, Shows);
-                    searchRec.getSearchRec(action);
-                }
-                if (action.getType().equals("popular")) {
-                    PopularRec popularRec = new PopularRec(Users,Movies,Shows);
-                    popularRec.getPopular(action);
-                }
-                if (action.getType().equals("favorite")) {
-                    FavoriteRec favoriteRec = new FavoriteRec(Users,Movies,Shows);
-                    favoriteRec.gerFavoriteRec(action);
-                }
+                Recommendation recommendation = new Recommendation(users, shows, movies);
+                recommendation.execute(action);
             }
         }
         fileWriter.closeJSON(arrayResult);

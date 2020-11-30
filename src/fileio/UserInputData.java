@@ -30,12 +30,12 @@ public final class UserInputData {
     /**
      * Ratings a user gave to certain shows
      */
-    private HashMap<String, Double> rated = new HashMap<>();
+    private final HashMap<String, Double> rated = new HashMap<>();
 
     /**
      * Check if a show was rated or not
      */
-    private HashMap<String, Integer> check = new HashMap<>();
+    private final HashMap<String, Integer> check = new HashMap<>();
 
     /**
      * Number of ratings a user gave
